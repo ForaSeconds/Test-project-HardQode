@@ -1,13 +1,15 @@
 from django.db import models
+from django.conf import settings
 
 
 class Course(models.Model):
     """Модель продукта - курса."""
 
-    author = models.CharField(
-        max_length=250,
-        verbose_name='Автор',
-    )
+    author = models.ForeignKey(
+                               settings.AUTH_USER_MODEL,
+                               on_delete=models.CASCADE,
+                               related_name='courses',
+                               verbose_name='Автор')
     title = models.CharField(
         max_length=250,
         verbose_name='Название',
@@ -18,7 +20,11 @@ class Course(models.Model):
         verbose_name='Дата и время начала курса'
     )
 
-    # TODO
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Стоимость'
+    )
 
     class Meta:
         verbose_name = 'Курс'
@@ -41,7 +47,13 @@ class Lesson(models.Model):
         verbose_name='Ссылка',
     )
 
-    # TODO
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='lessons',
+        verbose_name='Курс'
+
+    )
 
     class Meta:
         verbose_name = 'Урок'
